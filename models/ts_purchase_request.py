@@ -1,4 +1,5 @@
 from odoo import models,fields,api
+from odoo.exceptions import ValidationError, UserError
 
 class TsPurchaseRequest(models.Model):
     _name= "ts.purchase.request"
@@ -6,11 +7,11 @@ class TsPurchaseRequest(models.Model):
 
     name = fields.Char(string="Ma yeu cau", required=True)
     request_date = fields.Date(string="Ngay yeu cau", required=True)
-    requester_id = fields.Many2one("res.user", string="Nguoi yeu cau", required=True)
+    requester_id = fields.Many2one("res.users", string="Nguoi yeu cau", required=True)
     department_name = fields.Char(string="Bo phan yeu cau")
     purpose = fields.Text(string="Muc dich mua")
     needed_date = fields.Date(string="Ngay can hang")
-    line_ids = fields.One2many("request_id", "ts.purchase.request", string="Dong vat tu can mua")
+    line_ids = fields.One2many("ts.purchase.request.line", "request_id", string="Dong vat tu can mua")
     line_count = fields.Integer(string="So dong vat tu", compute="_compute_line_ids")
     amount_total = fields.Float(string="Tong tien du kien", compute="_compute_amount_total")
     state = fields.Selection(string="Trang thai", selection=[
@@ -26,4 +27,42 @@ class TsPurchaseRequest(models.Model):
     @api.depends("line_ids.subtotal")
     def _compute_amount_total(self):
         for rec in self:
-            rec.amount_total = sum(rec.line_ids.mapped("subtoatal"))
+            rec.amount_total = sum(rec.line_ids.mapped("subtotal"))
+
+    @api.constrains("needed_date","request_date")
+    def _compute_constrains_error(self):
+        for rec in self:
+            if rec.needed_date < rec.request_date:
+                raise ValidationError(f"Không cho 'Ngày cần hàng' nhỏ hơn 'Ngày yêu cầu'.")
+
+    def action_submitted(self):
+        for rec in self:
+            if not rec.line_ids:
+                raise UserError("Chưa có sản phẩm yêu cầu mua.")
+            rec.state = "submitted"
+
+    def action_approved(self):
+        for rec in self:
+            rec.state = "approved"
+
+    def action_rejected(self):
+        for rec in self:
+            rec.state = "rejected"
+
+    def action_purchasing(self):
+        for rec in self:
+            if rec.state != "approved":
+                raise UserError("Yêu cầu chưa được duyệt.")
+            rec.state = "purchasing"
+
+    def action_done(self):
+        for rec in self:
+            rec.state = "done"
+
+    def action_cancel(self):
+        for rec in self:
+            rec.state = "cancel"
+
+    def action_draft(self):
+        for rec in self:
+            rec.state = "draft"

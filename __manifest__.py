@@ -1,14 +1,15 @@
 {
     "name": "TS Purchase Request",
-    "version": "1.0",
+    "version": "19.0.0.0.0",
     "author": "Chien",
     "summary": "Yeu cau mua hang",
     "category": "Purchase",
-    "depends": ["base","pruchase"],
+    "depends": ["base","purchase"],
     "data": [
-        
+        "security/ir.model.access.csv",
+        "views/ts_purchase_request_views.xml"
     ],
     "application": True,
-    "installble": True,
+    "installable": True,
     "license": "LGPL-3",
 }

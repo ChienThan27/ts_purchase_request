@@ -1,0 +1,101 @@
+<odoo>
+    <record id="view_ts_purchase_request_list" model="ir.ui.view">
+        <field name="name">ts.purchase.request.list</field>
+        <field name="model">ts.purchase.request</field>
+        <field name="arch" type="xml">
+            <list string="Phiếu yêu cầu">
+                <field name="name"/>
+                <field name="request_date"/>
+                <field name="requester_id"/>
+                <field name="department_name"/>
+                <field name="amount_total"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_ts_purchase_request_form" model="ir.ui.view">
+        <field name="name">ts.purchase.request.form</field>
+        <field name="model">ts.purchase.request</field>
+        <field name="arch" type="xml">
+            <form string="Phiếu yêu cầu">
+                <header>
+                    <button name="action_submitted" string="Gửi duyệt" type="object" class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_approved" string="Duyệt" type="object" class="btn-success" invisible="state != 'submitted'"/>
+                    <button name="action_rejected" string="Từ chối" type="object" invisible="state != 'submitted'"/>
+                    <button name="action_purchasing" string="Chuyển mua hàng" type="object" class="btn-primary" invisible="state != 'approved'"/>
+                    <button name="action_done" string="Hoàn tất" type="object" class="btn-primary" invisible="state != 'purchasing'"/>
+                    <button name="action_draft" string="Về nháp" type="object" class="btn-primary" invisible="state not in ('cancel')"/>
+                    <button name="action_cancel" string="Hủy" type="object" invisible="state in ('draft', 'cancel')"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="request_date"/>
+                        <field name="requester_id"/>
+                        <field name="department_name"/>
+                        <field name="purpose"/>
+                        <field name="needed_date"/>
+                        <field name="amount_total" readonly="1"/>
+                    </group>
+                    <group>
+                        <field name="note"/>
+                    </group>
+                    <notebook>
+                        <page string="Dòng vật tư">
+                            <field name="line_ids" readonly="state == 'done'">
+                                <list editable="bottom">
+                                    <field name="product_id"/>
+                                    <field name="description"/>
+                                    <field name="quantity"/>
+                                    <field name="uom_id"/>
+                                    <field name="estimated_price"/>
+                                    <field name="vendor_id"/>
+                                    <field name="note"/>
+                                    <field name="subtotal"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_ts_purchase_request_search" model="ir.ui.view">
+        <field name="name">ts.purchase.request.search</field>
+        <field name="model">ts.purchase.request</field>
+        <field name="arch" type="xml">
+            <search string="Tìm phiếu lương">
+                <field name="name"/>
+                <field name="requester_id"/>
+                <field name="department_name"/>
+
+                <filter name="filter_state_draft" string="Nháp" domain="[('state','=','draft')]"/>
+                <filter name="filter_state_submitted" string="Đã gửi duyệt" domain="[('state','=','submitted')]"/>
+                <filter name="filter_state_approved" string="Đã duyệt" domain="[('state','=','draft')]"/>
+                <filter name="filter_state_purchasing" string="Đang mua hàng" domain="[('state','=','draft')]"/>
+                <filter name="filter_state_done" string="Hoàn tất" domain="[('state','=','draft')]"/>
+                <filter name="filter_state_cancel" string="Hủy" domain="[('state','=','cancel')]"/>
+                <filter name="filter_state_rejected" string="Từ chối" domain="[('state','=','rejected')]"/>
+
+                <filter name="filter_request_date" string="Ngày cần hàng" context="{'group_by':'request_date'}"/>
+                <filter name="filter_request_date" string="Người yêu cầu" context="{'group_by':'requester_id'}"/>
+                <filter name="filter_request_date" string="Bộ phận yêu cầu" context="{'group_by':'department_name'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_ts_purchase_request" model="ir.actions.act_window">
+        <field name="name">Phiếu yêu cầu</field>
+        <field name="res_model">ts.purchase.request</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_ts_purchase_request_search"></field>
+
+    </record>
+
+
+    <menuitem id="menu_ts_purchase_request_root" name="Purchase Request"></menuitem>
+    <menuitem id="menu_ts_purchase_request" name="Tao don yeu cau" parent="menu_ts_purchase_request_root" action="action_ts_purchase_request"></menuitem>
+</odoo>
