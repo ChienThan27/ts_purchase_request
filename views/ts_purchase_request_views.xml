@@ -20,6 +20,7 @@
         <field name="arch" type="xml">
             <form string="Phiếu yêu cầu">
                 <header>
+                    <button name="action_open_wizard_product" string="Them san pham" type="object" class="btn-primary" invisible="state != 'draft'"/>
                     <button name="action_submitted" string="Gửi duyệt" type="object" class="btn-primary" invisible="state != 'draft'"/>
                     <button name="action_approved" string="Duyệt" type="object" class="btn-success" invisible="state != 'submitted'"/>
                     <button name="action_rejected" string="Từ chối" type="object" invisible="state != 'submitted'"/>

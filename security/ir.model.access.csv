@@ -1,3 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_ts_purchase_request_user,access.ts.purchase.request.user,model_ts_purchase_request,base.group_user,1,1,1,1
 access_ts_purchase_request_line_user,access.ts.purchase.request.line.user,model_ts_purchase_request_line,base.group_user,1,1,1,1
+access_ts_purchase_request_add_products_wizard_user,access.ts.purchase.request.add.products.wizard.user,model_ts_purchase_request_add_products_wizard,base.group_user,1,1,1,1

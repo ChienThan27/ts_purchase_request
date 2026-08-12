@@ -66,3 +66,16 @@ class TsPurchaseRequest(models.Model):
     def action_draft(self):
         for rec in self:
             rec.state = "draft"
+
+    def action_open_wizard_product(self):
+        self.ensure_one()
+        return{
+            "type":"ir.actions.act_window",
+            "name":"Them san pham",
+            "res_model":"ts.purchase.request.add.products.wizard",
+            "view_mode":"form",
+            "target":"new",
+            "context":{
+                "default_request_id": self.id,
+            }
+        }

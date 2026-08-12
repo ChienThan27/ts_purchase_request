@@ -1,0 +1,20 @@
+<odoo>
+    <record id="view_ts_purchase_request_add_products_wizard" model="ir.ui.view">
+        <field name="name">ts.purchase.request.add.products.wizard.form</field>
+        <field name="model">ts.purchase.request.add.products.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Them san pham">
+                <group>
+                    <field name="request_id" invisible="1"/>
+                    <field name="product_ids" widget="many2many_tags"/>
+                    <field name="default_quantity"/>
+                    <field name="skip_existing"/>
+                </group>
+                <footer>
+                    <button name="action_add_products" string="Them san pham" type="object" class="btn-primary"/>
+                    <button string="Huy" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
