@@ -13,7 +13,7 @@ class TsPurchaseRequest(models.Model):
     needed_date = fields.Date(string="Ngay can hang")
     line_ids = fields.One2many("ts.purchase.request.line", "request_id", string="Dong vat tu can mua")
     line_count = fields.Integer(string="So dong vat tu", compute="_compute_line_ids")
-    amount_total = fields.Float(string="Tong tien du kien", compute="_compute_amount_total")
+    amount_total = fields.Float(string="Tong tien du kien", compute="_compute_amount_total", aggregator="sum", store=True)
     state = fields.Selection(string="Trang thai", selection=[
         ("draft", "Nhap"), ("submitted","Da gui duyet"), ("approved","Da duyet"), ("purchasing","Dang mua hang"), ("done","Hoan tat"), ("cancel","Huy"), ("rejected","Tu choi")   
     ], default="draft")

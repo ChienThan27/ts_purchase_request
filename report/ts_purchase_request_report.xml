@@ -1,0 +1,117 @@
+<odoo>
+    <record id="action_ts_purchase_request_report" model="ir.actions.report">
+        <field name="name">Phiếu yêu cầu</field>
+        <field name="model">ts.purchase.request</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ts_purchase_request.ts_purchase_request_report</field>
+        <field name="report_file">ts_purchase_request.ts_purchase_request_report</field>
+        <field name="binding_model_id" ref="model_ts_purchase_request"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="ts_purchase_request_report">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="pur">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2 style="color: firebrick;">Phiếu yêu cầu mua hàng</h2>
+
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <p>
+                                        <strong>Mã yêu cầu: </strong>
+                                        <span t-field="pur.name"/>
+                                    </p>
+                                    <p>
+                                        <strong>Người yêu cầu: </strong>
+                                        <span t-field="pur.requester_id"/>
+                                    </p>
+                                    <p>
+                                        <strong>Bộ phận: </strong>
+                                        <span t-field="pur.department_name"/>
+                                    </p>
+                                </div>
+                                <div class="col-sm-6">
+                                    <p>
+                                        <strong>Ngày yêu cầu: </strong>
+                                        <span t-field="pur.request_date"/>
+                                    </p>
+                                    <p>
+                                        <strong>Ngày cần hàng: </strong>
+                                        <span t-field="pur.needed_date"/>
+                                    </p>
+                                </div>
+                                <div class="col-sm-12">
+                                    <p>
+                                        <strong>Mục đích: </strong>
+                                        <span t-field="pur.purpose"/>
+                                    </p>
+                                </div>
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Sản phẩm</th>
+                                            <th>Mô tả</th>
+                                            <th>Số lượng</th>
+                                            <th>Giá dự kiến</th>
+                                            <th>Nhà cung cấp đề xuất</th>
+                                            <th>Ghi chú dòng</th>
+                                            <th>Thành tiền</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr t-foreach="pur.line_ids" t-as="line">
+                                            <td>
+                                                <span t-field="line.product_id.name"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="line.description"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="line.quantity"/><span t-field="line.uom_id"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="line.estimated_price"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="line.vendor_id"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="line.note"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="line.subtotal"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Tổng tiền dự kiến</th>
+                                            <td>
+                                                <span t-field="pur.amount_total"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="col-sm-4">
+                                    <p>
+                                        <strong>Chữ ký người yêu cầu</strong>
+                                    </p>
+                                </div>
+                                <div class="col-sm-4">
+                                    <p>
+                                        <strong>Chữ ký trưởng bộ phận</strong>
+                                    </p>
+                                </div>
+                                <div class="col-sm-4">
+                                    <p>
+                                        <strong>Chữ ký mua hàng</strong>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>
